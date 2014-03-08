@@ -16,6 +16,15 @@ Trie.prototype.learn = function(word, index){
   // A word does not necessarily end at a leaf.
   // You must mark nodes which are the ends of words,
   // so that the words can be reconstructed later.
+  if (index === undefined) {
+    index = 0;
+  }
+
+  for (i in word){
+    this.characters[word[i]] = new Trie();
+    i++;
+    Trie.prototype.learn(word, i);
+  }
 };
 
 Trie.prototype.getWords = function(words, currentWord){
@@ -33,7 +42,7 @@ Trie.prototype.find = function(word, index){
 };
 
 Trie.prototype.autoComplete = function(prefix){
-  // This function will return all completions 
+  // This function will return all completions
   // for a given prefix.
   // It should use find and getWords.
 };
