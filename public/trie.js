@@ -2,28 +2,20 @@ Trie = function(){
   this.characters = {};
 };
 
-Trie.prototype.learn = function(word, index){
-  // This function should add the given word,
-  // starting from the given index,
-  // to this Trie.
+Trie.prototype.learn = function(word, i){
+  //if i isn't specified, make it 0
+  if (!i) {i = 0;}
 
-  // It will be recursive.  It will tell
-  // the correct child of this Trie to learn the word
-  // starting from a later index.
-
-  // Consider what the learn function should do
-  // when it reaches the end of the word?
-  // A word does not necessarily end at a leaf.
-  // You must mark nodes which are the ends of words,
-  // so that the words can be reconstructed later.
-  if (index === undefined) {
-    index = 0;
+  //add current character if it isn't undef or already in this.characters
+  if (word[i] && !this.characters.hasOwnProperty(word[i])) {
+    this.characters[word[i]] = new Trie();
   }
 
-  for (i in word){
-    this.characters[word[i]] = new Trie();
+  if (i < word.length) {
     i++;
-    Trie.prototype.learn(word, i);
+    this.characters[word[i - 1]].learn(word, i);
+  } else {
+    this.isWord = true;
   }
 };
 
@@ -32,6 +24,19 @@ Trie.prototype.getWords = function(words, currentWord){
   // contained in this Trie.
   // it will use currentWord as a prefix,
   // since a Trie doesn't know about its parents.
+
+  _.each(this.characters, function(value, key){
+    if (this.isWord){
+      words.push(currentWord);
+      if (value.characters === {}) { currentWord = ""; }
+    }
+
+    if (value.characters === {}) {
+      value.getWords(words, currentWord);
+    }
+  }, this);
+
+  return words;
 };
 
 Trie.prototype.find = function(word, index){
